@@ -1,0 +1,42 @@
+{
+  "intencion_a_indice": {
+    "cambio": 0,
+    "corner": 1,
+    "falta": 2,
+    "fin_partido": 3,
+    "fin_primer_tiempo": 4,
+    "gol": 5,
+    "inicio_partido": 6,
+    "inicio_primer_tiempo": 7,
+    "inicio_segundo_tiempo": 8,
+    "offside": 9,
+    "penal": 10,
+    "saque_banda": 11,
+    "saque_puerta": 12,
+    "tarjeta_amarilla": 13,
+    "tarjeta_roja": 14,
+    "tiempo_adicional": 15,
+    "tiro_libre": 16
+  },
+  "indice_a_intencion": {
+    "0": "cambio",
+    "1": "corner",
+    "2": "falta",
+    "3": "fin_partido",
+    "4": "fin_primer_tiempo",
+    "5": "gol",
+    "6": "inicio_partido",
+    "7": "inicio_primer_tiempo",
+    "8": "inicio_segundo_tiempo",
+    "9": "offside",
+    "10": "penal",
+    "11": "saque_banda",
+    "12": "saque_puerta",
+    "13": "tarjeta_amarilla",
+    "14": "tarjeta_roja",
+    "15": "tiempo_adicional",
+    "16": "tiro_libre"
+  },
+  "max_longitud": 25,
+  "vocab_size": 136
+}
