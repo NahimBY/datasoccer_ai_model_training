@@ -4,6 +4,7 @@ import pandas as pd
 import json
 import re
 import pickle
+from sklearn.model_selection import StratifiedShuffleSplit
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report, confusion_matrix
 from tensorflow.keras.preprocessing.text import Tokenizer
@@ -15,6 +16,33 @@ from tensorflow.keras.layers import (Input, Embedding, LSTM, Dense, Bidirectiona
 from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
 from tensorflow.keras.regularizers import l2
 from sklearn.utils.class_weight import compute_class_weight
+from collections import Counter
+
+def cargar_nombres(ruta_nombres, ruta_apellidos):
+    with open(ruta_nombres, 'r', encoding='utf-8') as f:
+        nombres_data = json.load(f)
+    with open(ruta_apellidos, 'r', encoding='utf-8') as f:
+        apellidos_data = json.load(f)
+
+    nombres = nombres_data.get("nombres", [])
+    apellidos = apellidos_data.get("apellidos", [])
+
+    nombres_completos = []
+    for nombre in nombres:
+        for apellido in apellidos:
+            nombres_completos.append(f"{nombre} {apellido}")
+    return nombres_completos
+
+# Rutas a tus archivos JSON
+ruta_nombres = 'names.json'
+ruta_apellidos = 'last_names.json'
+
+# Cargar nombres completos
+try:
+    lista_nombres = cargar_nombres(ruta_nombres, ruta_apellidos)
+except FileNotFoundError:
+    print("Advertencia: no se encontraron los archivos names.json o last_names.json. Se omitirá la detección de nombres.")
+    lista_nombres = []
 
 # DATASET EXPANDIDO Y MEJORADO
 ejemplos_entrenamiento = [
@@ -134,6 +162,7 @@ ejemplos_entrenamiento = [
     {"texto": "Falta directa", "intencion": "tiro_libre", "entidades": {}},
 ]
 
+
 # TÉCNICAS DE AUMENTO DE DATOS MEJORADAS
 def aumentar_datos_inteligente(ejemplos):
     """Función mejorada para balancear el dataset"""
@@ -220,12 +249,9 @@ ejemplos_entrenamiento = aumentar_datos_inteligente(ejemplos_entrenamiento)
 
 # Preprocesamiento mejorado
 def limpiar_texto(texto):
-    """Función para limpiar y normalizar el texto"""
     texto = texto.lower()
-    # Eliminar acentos básicos
     texto = texto.replace('á', 'a').replace('é', 'e').replace('í', 'i')
     texto = texto.replace('ó', 'o').replace('ú', 'u').replace('ñ', 'n')
-    # Normalizar espacios
     texto = re.sub(r'\s+', ' ', texto).strip()
     return texto
 
@@ -267,8 +293,6 @@ tokenizer.fit_on_texts(textos)
 secuencias = tokenizer.texts_to_sequences(textos)
 X = pad_sequences(secuencias, maxlen=max_longitud, padding='post')
 
-# División de datos para validación con estratificación mejorada
-from sklearn.model_selection import StratifiedShuffleSplit
 
 # Verificar distribución de clases
 print("Distribución original de clases:")
@@ -320,65 +344,8 @@ except ValueError as e:
         X, y_intencion, test_size=0.25, random_state=42
     )
 
-# MODELO MEJORADO CON ARQUITECTURA MÁS SOFISTICADA
-def crear_modelo_avanzado(vocab_size, embedding_dim=256, lstm_units=128):
-    entrada = Input(shape=(max_longitud,))
-    
-    # Embedding layer mejorado
-    x = Embedding(
-        vocab_size, 
-        embedding_dim, 
-        input_length=max_longitud,
-        embeddings_regularizer=l2(0.001)
-    )(entrada)
-    x = Dropout(0.2)(x)
-    
-    # Múltiples capas LSTM bidireccionales
-    x = Bidirectional(LSTM(lstm_units, return_sequences=True, dropout=0.2, recurrent_dropout=0.2))(x)
-    x = LayerNormalization()(x)
-    
-    x = Bidirectional(LSTM(lstm_units//2, return_sequences=True, dropout=0.2, recurrent_dropout=0.2))(x)
-    x = LayerNormalization()(x)
-    
-    # Pooling global mejorado
-    max_pool = GlobalMaxPooling1D()(x)
-    
-    # Capas densas con regularización
-    x = Dense(256, activation='relu', kernel_regularizer=l2(0.001))(max_pool)
-    x = BatchNormalization()(x)
-    x = Dropout(0.5)(x)
-    
-    x = Dense(128, activation='relu', kernel_regularizer=l2(0.001))(x)
-    x = BatchNormalization()(x)
-    x = Dropout(0.3)(x)
-    
-    # Capa de salida
-    salida = Dense(len(intenciones_unicas), activation='softmax')(x)
-    
-    modelo = Model(inputs=entrada, outputs=salida)
-    
-    # Optimizador mejorado
-    optimizer = tf.keras.optimizers.Adam(
-        learning_rate=0.001,
-        beta_1=0.9,
-        beta_2=0.999,
-        epsilon=1e-07
-    )
-    
-    modelo.compile(
-        loss='categorical_crossentropy',
-        optimizer=optimizer,
-        metrics=['accuracy', 'top_k_categorical_accuracy']
-    )
-    
-    return modelo
-
-
-# Convertir y_true a formato numérico
-y_true_classes = np.argmax(y_intencion, axis=1)
-
 # Calcular pesos de clase
-class_weights = compute_class_weight('balanced', classes=np.unique(y_true_classes), y=y_true_classes)
+class_weights = compute_class_weight('balanced', classes=np.arange(len(intenciones_unicas)), y=np.argmax(y_intencion, axis=1))
 class_weights_dict = dict(enumerate(class_weights))
 
 print("\nPesos de clase calculados:")
@@ -386,15 +353,91 @@ for idx, weight in class_weights_dict.items():
     print(f"Clase '{indice_a_intencion[idx]}': {weight:.4f}")
 
 
-# Crear el modelo
+# MODELO MEJORADO CON ARQUITECTURA MÁS SOFISTICADA
+# def crear_modelo_avanzado(vocab_size, embedding_dim=256, lstm_units=128):
+#     entrada = Input(shape=(max_longitud,))
+#     
+#     # Embedding layer mejorado
+#     x = Embedding(
+#         vocab_size, 
+#         embedding_dim, 
+#         input_length=max_longitud,
+#         embeddings_regularizer=l2(0.001)
+#     )(entrada)
+#     x = Dropout(0.2)(x)
+#     
+#     # Múltiples capas LSTM bidireccionales
+#     x = Bidirectional(LSTM(lstm_units, return_sequences=True, dropout=0.2, recurrent_dropout=0.2))(x)
+#     x = LayerNormalization()(x)
+#     
+#     x = Bidirectional(LSTM(lstm_units//2, return_sequences=True, dropout=0.2, recurrent_dropout=0.2))(x)
+#     x = LayerNormalization()(x)
+#     
+#     # Pooling global mejorado
+#     max_pool = GlobalMaxPooling1D()(x)
+#     
+#     # Capas densas con regularización
+#     x = Dense(256, activation='relu', kernel_regularizer=l2(0.001))(max_pool)
+#     x = BatchNormalization()(x)
+#     x = Dropout(0.5)(x)
+#     
+#     x = Dense(128, activation='relu', kernel_regularizer=l2(0.001))(x)
+#     x = BatchNormalization()(x)
+#     x = Dropout(0.3)(x)
+#     
+#     # Capa de salida
+#     salida = Dense(len(intenciones_unicas), activation='softmax')(x)
+#     
+#     modelo = Model(inputs=entrada, outputs=salida)
+#     
+#     # Optimizador mejorado
+#     optimizer = tf.keras.optimizers.Adam(
+#         learning_rate=0.001,
+#         beta_1=0.9,
+#         beta_2=0.999,
+#         epsilon=1e-07
+#     )
+#     
+#     modelo.compile(
+#         loss='categorical_crossentropy',
+#         optimizer=optimizer,
+#         metrics=['accuracy', 'top_k_categorical_accuracy']
+#     )
+#     
+#     return modelo
+
+
+
+# testing new model
+def crear_modelo_avanzado(vocab_size):
+    entrada = Input(shape=(max_longitud,))
+    x = Embedding(vocab_size, 256)(entrada)
+    x = Dropout(0.2)(x)
+    x = Bidirectional(LSTM(128, return_sequences=True, recurrent_dropout=0.2))(x)
+    x = LayerNormalization()(x)
+    x = Bidirectional(LSTM(64, return_sequences=False, recurrent_dropout=0.2))(x)
+    x = Dense(256, activation='relu')(x)
+    x = BatchNormalization()(x)
+    x = Dropout(0.5)(x)
+    salida = Dense(len(intenciones_unicas), activation='softmax')(x)
+    modelo = Model(inputs=entrada, outputs=salida)
+    modelo.compile(
+        loss='categorical_crossentropy',
+        optimizer=tf.keras.optimizers.Adam(learning_rate=0.001),
+        metrics=['accuracy', 'top_k_categorical_accuracy']
+    )
+    return modelo
+
+
+
+
 vocab_size = min(max_palabras, len(tokenizer.word_index) + 1)
-modelo_intencion = crear_modelo_avanzado(vocab_size)
-modelo_intencion.summary()
+modelo_intencion = crear_modelo_avanzado(min(max_palabras, len(tokenizer.word_index) + 1))
 
 # Callbacks mejorados
 callbacks = [
     EarlyStopping(
-        monitor='val_accuracy',
+        monitor='val_loss',
         patience=15,
         restore_best_weights=True,
         verbose=1
@@ -424,11 +467,29 @@ history = modelo_intencion.fit(
     class_weight=class_weights_dict
 )
 
+# Guardar archivos
+modelo_intencion.save('intencion_model_mejorado.keras')
+# modelo_intencion.export('intencion_model_mejorado_tflite')
+
+with open('tokenizer_mejorado.pickle', 'wb') as handle:
+    pickle.dump(tokenizer, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+with open('intencion_mapeo_mejorado.json', 'w', encoding='utf-8') as f:
+    json.dump({
+        "intencion_a_indice": intencion_a_indice,
+        "indice_a_intencion": indice_a_intencion,
+        "max_longitud": max_longitud,
+        "vocab_size": vocab_size 
+    }, f, ensure_ascii=False, indent=2)
+
 # Evaluación detallada
-print("\nEvaluación en datos de validación:")
-val_loss, val_accuracy, val_top_k = modelo_intencion.evaluate(X_val, y_val, verbose=0)
-print(f"Accuracy: {val_accuracy:.4f}")
-print(f"Top-K Accuracy: {val_top_k:.4f}")
+print("\n" + "=" * 50)
+print("RESULTADOS FINALES")
+print("=" * 50)
+
+val_loss, val_acc, val_topk = modelo_intencion.evaluate(X_val, y_val, verbose=0)
+print(f"Accuracy: {val_acc:.4f}")
+print(f"Top-K Accuracy: {val_topk:.4f}")
 
 # Predicciones para reporte detallado
 y_pred = modelo_intencion.predict(X_val)
@@ -443,22 +504,19 @@ clases_presentes = np.unique(np.concatenate([y_true_classes, y_pred_classes]))
 print(f"Clases en validación: {len(clases_presentes)} de {len(intenciones_unicas)} totales")
 
 # Crear labels y target_names solo para las clases presentes
-labels_presentes = sorted(clases_presentes)
-target_names_presentes = [indice_a_intencion[i] for i in labels_presentes]
+target_names_presentes = [indice_a_intencion[i] for i in clases_presentes]
 
 print(classification_report(
     y_true_classes, 
     y_pred_classes, 
-    labels=labels_presentes,
+    labels=clases_presentes,
     target_names=target_names_presentes,
     zero_division=0
 ))
 
 # Mostrar matriz de confusión
 print("\nMatriz de confusión:")
-cm = confusion_matrix(y_true_classes, y_pred_classes, labels=labels_presentes)
-print("Clases:", target_names_presentes)
-print(cm)
+print(confusion_matrix(y_true_classes, y_pred_classes))
 
 # Análisis detallado por clase
 print("\nAnálisis detallado por clase:")
@@ -484,90 +542,45 @@ for i, clase in enumerate(intenciones_unicas):
 
 
 
-# Extractor de entidades mejorado
-def extraer_entidades_mejorado(texto, intencion):
-    """Extractor de entidades mejorado con más patrones"""
+def extraer_entidades_mejorado(texto, intencion, lista_jugadores):
     entidades = {}
-    texto_original = texto
     texto = texto.lower()
-    
-    # Mapeo de números escritos a dígitos
-    numeros_texto = {
-        "uno": "1", "dos": "2", "tres": "3", "cuatro": "4", "cinco": "5",
-        "seis": "6", "siete": "7", "ocho": "8", "nueve": "9", "diez": "10",
-        "once": "11", "doce": "12", "trece": "13", "catorce": "14", "quince": "15"
-    }
-    
-    for palabra, numero in numeros_texto.items():
-        texto = texto.replace(palabra, numero)
-    
-    # Patrones para números de jugadores
-    if intencion in ["gol", "falta", "tarjeta_amarilla", "tarjeta_roja", "offside"]:
-        patrones_jugador = [
-            r'(?:jugador\s+(?:número\s+)?|número\s+|#|el\s+)(\d+)',
-            r'(?:^|\s)(\d+)(?:\s|$)',  # Número solo
-        ]
-        
-        for patron in patrones_jugador:
-            match = re.search(patron, texto)
-            if match:
-                entidades["jugador_num"] = int(match.group(1))
-                break
-    
-    # Para cambios
-    if intencion == "cambio":
-        patrones_cambio = [
-            r'(\d+)\s+(?:por|y entra|reemplaza)\s+(?:el\s+)?(\d+)',
-            r'(?:entra\s+(?:el\s+)?(\d+)\s+por\s+(?:el\s+)?(\d+))',
-            r'(?:sale\s+(?:el\s+)?(\d+)\s+(?:y\s+)?entra\s+(?:el\s+)?(\d+))'
-        ]
-        
-        for patron in patrones_cambio:
-            match = re.search(patron, texto)
-            if match:
-                if "entra" in patron and "por" in patron:
-                    entidades["jugador_entra_num"] = int(match.group(1))
-                    entidades["jugador_sale_num"] = int(match.group(2))
-                else:
-                    entidades["jugador_sale_num"] = int(match.group(1))
-                    entidades["jugador_entra_num"] = int(match.group(2))
-                break
-    
+
+    # Buscar números de camiseta
+    if intencion in ["gol", "falta", "tarjeta_amarilla", "tarjeta_roja"]:
+        match = re.search(r'(?:el\s+)?(?:número|#|jugador)\s+(\d+)', texto)
+        if match:
+            entidades["jugador_num"] = int(match.group(1))
+
+    # Buscar nombres completos usando el JSON
+    for nombre in lista_jugadores:
+        if nombre.lower() in texto:
+            entidades["jugador_nombre"] = nombre
+            break
+
     # Equipos
     if "equipo" in intencion or intencion in ["gol", "penal", "corner"]:
         if "rojo" in texto:
             entidades["equipo"] = "rojo"
         elif "azul" in texto:
             entidades["equipo"] = "azul"
-    
-    # Tiempo adicional
-    if intencion == "tiempo_adicional":
-        match = re.search(r'(\d+)\s+minutos?', texto)
-        if match:
-            entidades["minutos"] = int(match.group(1))
-    
+
     return entidades
 
 # Función de procesamiento mejorada
-def procesar_texto_mejorado(texto):
+def procesar_texto_mejorado(texto, lista_jugadores):
     texto_limpio = limpiar_texto(texto)
     secuencia = tokenizer.texts_to_sequences([texto_limpio])
-    secuencia_padded = pad_sequences(secuencia, maxlen=max_longitud, padding='post')
-    
-    prediccion = modelo_intencion.predict(secuencia_padded, verbose=0)[0]
+    padded = pad_sequences(secuencia, maxlen=max_longitud, padding='post')
+    prediccion = modelo_intencion.predict(padded, verbose=0)[0]
     intencion_idx = np.argmax(prediccion)
     intencion = indice_a_intencion[intencion_idx]
-    confianza = prediccion[intencion_idx]
-    
-    # Top 3 predicciones para debugging
-    top_3_idx = np.argsort(prediccion)[-3:][::-1]
-    top_3 = [(indice_a_intencion[i], prediccion[i]) for i in top_3_idx]
-    
-    entidades = extraer_entidades_mejorado(texto, intencion)
-    
+    confianza = float(prediccion[intencion_idx])
+    top_3 = [(indice_a_intencion[i], float(prediccion[i])) for i in np.argsort(prediccion)[-3:][::-1]]
+    entidades = extraer_entidades_mejorado(texto_limpio, intencion, lista_jugadores)
     return {
         "intencion": intencion,
-        "confianza": float(confianza),
+        "confianza": confianza,
         "entidades": entidades,
         "top_3_predicciones": top_3
     }
@@ -580,7 +593,7 @@ ejemplos_prueba = [
     "Fuera de juego del 9",
     "Empieza el partido ahora",
     "Tres minutos de tiempo extra",
-    "Omar Uicab metió un golazo",
+    "Saturnino Cob metió un golazo",
     "Tarjeta amarilla para Román Pérez del equipo rojiblanco",
     "Cambio: sale el 8 y entra el 14",
     "Comienza el segundo tiempo",
@@ -604,27 +617,13 @@ print("PRUEBAS DEL MODELO MEJORADO")
 print("="*50)
 
 for ejemplo in ejemplos_prueba:
-    resultado = procesar_texto_mejorado(ejemplo)
+    resultado = procesar_texto_mejorado(ejemplo, lista_nombres)
     print(f"\nTexto: '{ejemplo}'")
     print(f"Intención: {resultado['intencion']} (confianza: {resultado['confianza']:.3f})")
     if resultado['entidades']:
         print(f"Entidades: {resultado['entidades']}")
     print(f"Top 3: {[(intent, f'{conf:.3f}') for intent, conf in resultado['top_3_predicciones']]}")
 
-# Guardar archivos
-modelo_intencion.save('intencion_model_mejorado.keras')
-# modelo_intencion.export('intencion_model_mejorado_tflite')
-
-with open('tokenizer_mejorado.pickle', 'wb') as handle:
-    pickle.dump(tokenizer, handle, protocol=pickle.HIGHEST_PROTOCOL)
-
-with open('intencion_mapeo_mejorado.json', 'w', encoding='utf-8') as f:
-    json.dump({
-        "intencion_a_indice": intencion_a_indice,
-        "indice_a_intencion": indice_a_intencion,
-        "max_longitud": max_longitud,
-        "vocab_size": vocab_size
-    }, f, ensure_ascii=False, indent=2)
 
 
 # Convertir a TensorFlow Lite con soporte para operaciones de TF
@@ -639,13 +638,13 @@ def convertir_a_tflite_optimizado(keras_model_path, tflite_path):
     converter.optimizations = [tf.lite.Optimize.DEFAULT]
     converter.target_spec.supported_types = [tf.float16]  # Para reducir tamaño
 
-    # ✅ Permitir operaciones de TensorFlow (Select TF Ops)
+    # Permitir operaciones de TensorFlow (Select TF Ops)
     converter.target_spec.supported_ops = [
         tf.lite.OpsSet.TFLITE_BUILTINS,  # Operaciones nativas de TFLite
         tf.lite.OpsSet.SELECT_TF_OPS    # Añadir operaciones de TensorFlow
     ]
 
-    # ✅ Desactivar la bajada de TensorList (opcional)
+    # Desactivar la bajada de TensorList (opcional)
     converter._experimental_lower_tensor_list_ops = False
 
     # Convertir
