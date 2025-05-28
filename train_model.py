@@ -428,9 +428,6 @@ def crear_modelo_avanzado(vocab_size):
     )
     return modelo
 
-
-
-
 vocab_size = min(max_palabras, len(tokenizer.word_index) + 1)
 modelo_intencion = crear_modelo_avanzado(min(max_palabras, len(tokenizer.word_index) + 1))
 
@@ -542,23 +539,59 @@ for i, clase in enumerate(intenciones_unicas):
 
 
 
+# def extraer_entidades_mejorado(texto, intencion, lista_jugadores):
+#     entidades = {}
+#     texto_original = texto
+#     texto = texto.lower()
+#
+#     # Buscar números de camiseta
+#     if intencion in ["gol", "falta", "tarjeta_amarilla", "tarjeta_roja"]:
+#         match = re.search(r'(?:el\s+)?(?:número|#|jugador)\s+(\d+)', texto)
+#         if match:
+#             entidades["jugador_num"] = int(match.group(1))
+#
+#     # Buscar nombres completos usando el JSON
+#     for nombre in lista_jugadores:
+#         if nombre.lower() in texto:
+#             entidades["jugador_nombre"] = nombre
+#             break
+#
+#     # Equipos
+#     if "equipo" in intencion or intencion in ["gol", "penal", "corner"]:
+#         if "rojo" in texto:
+#             entidades["equipo"] = "rojo"
+#         elif "azul" in texto:
+#             entidades["equipo"] = "azul"
+#
+#     return entidades
+
 def extraer_entidades_mejorado(texto, intencion, lista_jugadores):
     entidades = {}
+    texto_original = texto
     texto = texto.lower()
-
-    # Buscar números de camiseta
-    if intencion in ["gol", "falta", "tarjeta_amarilla", "tarjeta_roja"]:
-        match = re.search(r'(?:el\s+)?(?:número|#|jugador)\s+(\d+)', texto)
-        if match:
-            entidades["jugador_num"] = int(match.group(1))
 
     # Buscar nombres completos usando el JSON
     for nombre in lista_jugadores:
         if nombre.lower() in texto:
             entidades["jugador_nombre"] = nombre
-            break
+            break  # Salir si encontró nombre
 
-    # Equipos
+    # Si no hay nombre encontrado, buscar número
+    if "jugador_nombre" not in entidades:
+        if intencion in ["gol", "falta", "tarjeta_amarilla", "tarjeta_roja", "offside"]:
+            # Patrones para encontrar números de jugador
+            patrones_jugador = [
+                r'(?:jugador\s+(?:número\s+)?|número\s+|#|el\s+)(\d+)',
+                r'\b(\d+)\b'  # Números sueltos
+            ]
+            
+            for patron in patrones_jugador:
+                match = re.search(patron, texto)
+                if match:
+                    entidades["jugador_num"] = int(match.group(1))
+                    break  # Salir si encontró número
+
+    # Detectar equipos
     if "equipo" in intencion or intencion in ["gol", "penal", "corner"]:
         if "rojo" in texto:
             entidades["equipo"] = "rojo"
