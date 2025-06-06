@@ -66,106 +66,106 @@ ejemplos_entrenamiento = [
     {"texto": "Golazo de Aaron Abila", "intencion": "gol", "entidades": {"jugador_nombre": "Aaron Avila"}},
     
     # FALTAS - Más variaciones
-    {"texto": "Falta del número 10", "intencion": "falta", "entidades": {"jugador_num": 10}},
-    {"texto": "El jugador 10 cometió falta", "intencion": "falta", "entidades": {"jugador_num": 10}},
-    {"texto": "Falta cometida por el 10", "intencion": "falta", "entidades": {"jugador_num": 10}},
-    {"texto": "El 10 hace falta", "intencion": "falta", "entidades": {"jugador_num": 10}},
-    {"texto": "Infracción del jugador 10", "intencion": "falta", "entidades": {"jugador_num": 10}},
-    {"texto": "Pedro Sánchez hizo falta", "intencion": "falta", "entidades": {"jugador_nombre": "Pedro Sánchez"}},
-    {"texto": "Falta de Mizael Uc", "intencion": "falta", "entidades": {"jugador_nombre": "Mizael Uc"}},
-    {"texto": "Falta contra el número 3", "intencion": "falta", "entidades": {"jugador_afectado_num": 3}},
-    {"texto": "Falta sobre el 3", "intencion": "falta", "entidades": {"jugador_afectado_num": 3}},
-    {"texto": "Aaron Abila hizo falta", "intencion": "falta", "entidades": {"jugador_nombre": "Aaron Avila"}},
-    {"texto": "El jugador Aaron Abila cometió infracción", "intencion": "falta", "entidades": {"jugador_nombre": "Aaron Avila"}},
-    
-    # TARJETAS AMARILLAS - Más variaciones
-    {"texto": "Tarjeta amarilla para el 8", "intencion": "tarjeta_amarilla", "entidades": {"jugador_num": 8}},
-    {"texto": "Amarilla para el número 8", "intencion": "tarjeta_amarilla", "entidades": {"jugador_num": 8}},
-    {"texto": "El 8 recibe amarilla", "intencion": "tarjeta_amarilla", "entidades": {"jugador_num": 8}},
-    {"texto": "Amonestación para el 8", "intencion": "tarjeta_amarilla", "entidades": {"jugador_num": 8}},
-    {"texto": "Amarilla para Luis Fernández", "intencion": "tarjeta_amarilla", "entidades": {"jugador_nombre": "Luis Fernández"}},
-    {"texto": "Luis Fernández ve la amarilla", "intencion": "tarjeta_amarilla", "entidades": {"jugador_nombre": "Luis Fernández"}},
-    {"texto": "Tarjeta para Luis Fernández", "intencion": "tarjeta_amarilla", "entidades": {"jugador_nombre": "Luis Fernández"}},
-    
-    # TARJETAS ROJAS - Más variaciones
-    {"texto": "Tarjeta roja para el jugador número 5", "intencion": "tarjeta_roja", "entidades": {"jugador_num": 5}},
-    {"texto": "Roja para el 5", "intencion": "tarjeta_roja", "entidades": {"jugador_num": 5}},
-    {"texto": "El 5 es expulsado", "intencion": "tarjeta_roja", "entidades": {"jugador_num": 5}},
-    {"texto": "Expulsión del número 5", "intencion": "tarjeta_roja", "entidades": {"jugador_num": 5}},
-    {"texto": "El jugador 5 ve la roja", "intencion": "tarjeta_roja", "entidades": {"jugador_num": 5}},
-    {"texto": "Roja directa para Eduardo Casanova", "intencion": "tarjeta_roja", "entidades": {"jugador_nombre": "Eduardo Casanova"}},
-    {"texto": "Fuera el 5", "intencion": "tarjeta_roja", "entidades": {"jugador_num": 5}},
-    
-    # PENALES - Nueva categoría
-    {"texto": "Penal para el equipo azul", "intencion": "penal", "entidades": {"equipo": "azul"}},
-    {"texto": "Penalti a favor del equipo rojo", "intencion": "penal", "entidades": {"equipo": "rojo"}},
-    {"texto": "Penalty", "intencion": "penal", "entidades": {}},
-    {"texto": "Tiro penal", "intencion": "penal", "entidades": {}},
-    {"texto": "Falta dentro del área", "intencion": "penal", "entidades": {}},
-    {"texto": "Penal cobrado por el 10", "intencion": "penal", "entidades": {"jugador_num": 10}},
-    {"texto": "Penal claro para el equipo local", "intencion": "penal", "entidades": {"equipo": "local"}},
-    {"texto": "El árbitro marca penal para el visitante", "intencion": "penal", "entidades": {"equipo": "visitante"}},
-    {"texto": "Penalti cometido dentro del área", "intencion": "penal", "entidades": {}},
-    {"texto": "Señalan penalti después de revisar el VAR", "intencion": "penal", "entidades": {}},
-    {"texto": "El defensa toca el balón con la mano en el área", "intencion": "penal", "entidades": {}},
-    {"texto": "Penal claro para el equipo local", "intencion": "penal", "entidades": {"equipo": "local"}},
-    {"texto": "El árbitro marca penal para el visitante", "intencion": "penal", "entidades": {"equipo": "visitante"}},
-    {"texto": "Penal fallado por el delantero", "intencion": "penal", "entidades": {"jugador_posicion": "delantero"}},
-    
-    # CORNERS - Nueva categoría
-    {"texto": "Córner para el equipo azul", "intencion": "corner", "entidades": {"equipo": "azul"}},
-    {"texto": "Saque de esquina", "intencion": "corner", "entidades": {}},
-    {"texto": "Corner", "intencion": "corner", "entidades": {}},
-    {"texto": "Tiro de esquina para el rojo", "intencion": "corner", "entidades": {"equipo": "rojo"}},
-    
-    # OFFSIDE - Nueva categoría
-    {"texto": "Fuera de juego", "intencion": "offside", "entidades": {}},
-    {"texto": "Offside", "intencion": "offside", "entidades": {}},
-    {"texto": "El 9 estaba en fuera de juego", "intencion": "offside", "entidades": {"jugador_num": 9}},
-    {"texto": "Posición adelantada", "intencion": "offside", "entidades": {}},
-    
-    # CAMBIOS/SUSTITUCIONES - Más variaciones
-    {"texto": "Cambio del 9 por el 11", "intencion": "cambio", "entidades": {"jugador_sale_num": 9, "jugador_entra_num": 11}},
-    {"texto": "El 9 sale y entra el 11", "intencion": "cambio", "entidades": {"jugador_sale_num": 9, "jugador_entra_num": 11}},
-    {"texto": "Sustitución: 9 por 11", "intencion": "cambio", "entidades": {"jugador_sale_num": 9, "jugador_entra_num": 11}},
-    {"texto": "Entra el 11 por el 9", "intencion": "cambio", "entidades": {"jugador_sale_num": 9, "jugador_entra_num": 11}},
-    {"texto": "Sustitución: sale Carlos Vega y entra Juan Pérez", "intencion": "cambio", 
-     "entidades": {"jugador_sale_nombre": "Carlos Vega", "jugador_entra_nombre": "Juan Pérez"}},
-    {"texto": "Juan Pérez reemplaza a Carlos Vega", "intencion": "cambio", 
-     "entidades": {"jugador_sale_nombre": "Carlos Vega", "jugador_entra_nombre": "Juan Pérez"}},
-    
-    # TIEMPOS/PERÍODOS - Más variaciones
-    {"texto": "Comienza el partido", "intencion": "inicio_partido", "entidades": {}},
-    {"texto": "Inicia el encuentro", "intencion": "inicio_partido", "entidades": {}},
-    {"texto": "Pitazo inicial", "intencion": "inicio_partido", "entidades": {}},
-    {"texto": "Arranca el partido", "intencion": "inicio_partido", "entidades": {}},
-    {"texto": "Inicia el primer tiempo", "intencion": "inicio_primer_tiempo", "entidades": {}},
-    {"texto": "Comienza la primera mitad", "intencion": "inicio_primer_tiempo", "entidades": {}},
-    {"texto": "Comienza el segundo tiempo", "intencion": "inicio_segundo_tiempo", "entidades": {}},
-    {"texto": "Inicia la segunda mitad", "intencion": "inicio_segundo_tiempo", "entidades": {}},
-    {"texto": "Segundo tiempo en marcha", "intencion": "inicio_segundo_tiempo", "entidades": {}},
-    {"texto": "Fin del primer tiempo", "intencion": "fin_primer_tiempo", "entidades": {}},
-    {"texto": "Termina la primera mitad", "intencion": "fin_primer_tiempo", "entidades": {}},
-    {"texto": "Descanso", "intencion": "fin_primer_tiempo", "entidades": {}},
-    {"texto": "Final del partido", "intencion": "fin_partido", "entidades": {}},
-    {"texto": "Termina el encuentro", "intencion": "fin_partido", "entidades": {}},
-    {"texto": "Pitazo final", "intencion": "fin_partido", "entidades": {}},
-    {"texto": "Fin del juego", "intencion": "fin_partido", "entidades": {}},
-    
-    # TIEMPO ADICIONAL - Nueva categoría
-    {"texto": "Tiempo adicional", "intencion": "tiempo_adicional", "entidades": {}},
-    {"texto": "Tiempo de descuento", "intencion": "tiempo_adicional", "entidades": {}},
-    {"texto": "Minutos adicionales", "intencion": "tiempo_adicional", "entidades": {}},
-    {"texto": "5 minutos de descuento", "intencion": "tiempo_adicional", "entidades": {"minutos": 5}},
-    
-    # SAQUES - Nueva categoría  
-    {"texto": "Saque de banda", "intencion": "saque_banda", "entidades": {}},
-    {"texto": "Lateral", "intencion": "saque_banda", "entidades": {}},
-    {"texto": "Saque de puerta", "intencion": "saque_puerta", "entidades": {}},
-    {"texto": "Saque del portero", "intencion": "saque_puerta", "entidades": {}},
-    {"texto": "Tiro libre", "intencion": "tiro_libre", "entidades": {}},
-    {"texto": "Falta directa", "intencion": "tiro_libre", "entidades": {}},
-]
+#     {"texto": "Falta del número 10", "intencion": "falta", "entidades": {"jugador_num": 10}},
+#     {"texto": "El jugador 10 cometió falta", "intencion": "falta", "entidades": {"jugador_num": 10}},
+#     {"texto": "Falta cometida por el 10", "intencion": "falta", "entidades": {"jugador_num": 10}},
+#     {"texto": "El 10 hace falta", "intencion": "falta", "entidades": {"jugador_num": 10}},
+#     {"texto": "Infracción del jugador 10", "intencion": "falta", "entidades": {"jugador_num": 10}},
+#     {"texto": "Pedro Sánchez hizo falta", "intencion": "falta", "entidades": {"jugador_nombre": "Pedro Sánchez"}},
+#     {"texto": "Falta de Mizael Uc", "intencion": "falta", "entidades": {"jugador_nombre": "Mizael Uc"}},
+#     {"texto": "Falta contra el número 3", "intencion": "falta", "entidades": {"jugador_afectado_num": 3}},
+#     {"texto": "Falta sobre el 3", "intencion": "falta", "entidades": {"jugador_afectado_num": 3}},
+#     {"texto": "Aaron Abila hizo falta", "intencion": "falta", "entidades": {"jugador_nombre": "Aaron Avila"}},
+#     {"texto": "El jugador Aaron Abila cometió infracción", "intencion": "falta", "entidades": {"jugador_nombre": "Aaron Avila"}},
+#     
+#     # TARJETAS AMARILLAS - Más variaciones
+#     {"texto": "Tarjeta amarilla para el 8", "intencion": "tarjeta_amarilla", "entidades": {"jugador_num": 8}},
+#     {"texto": "Amarilla para el número 8", "intencion": "tarjeta_amarilla", "entidades": {"jugador_num": 8}},
+#     {"texto": "El 8 recibe amarilla", "intencion": "tarjeta_amarilla", "entidades": {"jugador_num": 8}},
+#     {"texto": "Amonestación para el 8", "intencion": "tarjeta_amarilla", "entidades": {"jugador_num": 8}},
+#     {"texto": "Amarilla para Luis Fernández", "intencion": "tarjeta_amarilla", "entidades": {"jugador_nombre": "Luis Fernández"}},
+#     {"texto": "Luis Fernández ve la amarilla", "intencion": "tarjeta_amarilla", "entidades": {"jugador_nombre": "Luis Fernández"}},
+#     {"texto": "Tarjeta para Luis Fernández", "intencion": "tarjeta_amarilla", "entidades": {"jugador_nombre": "Luis Fernández"}},
+#     
+#     # TARJETAS ROJAS - Más variaciones
+#     {"texto": "Tarjeta roja para el jugador número 5", "intencion": "tarjeta_roja", "entidades": {"jugador_num": 5}},
+#     {"texto": "Roja para el 5", "intencion": "tarjeta_roja", "entidades": {"jugador_num": 5}},
+#     {"texto": "El 5 es expulsado", "intencion": "tarjeta_roja", "entidades": {"jugador_num": 5}},
+#     {"texto": "Expulsión del número 5", "intencion": "tarjeta_roja", "entidades": {"jugador_num": 5}},
+#     {"texto": "El jugador 5 ve la roja", "intencion": "tarjeta_roja", "entidades": {"jugador_num": 5}},
+#     {"texto": "Roja directa para Eduardo Casanova", "intencion": "tarjeta_roja", "entidades": {"jugador_nombre": "Eduardo Casanova"}},
+#     {"texto": "Fuera el 5", "intencion": "tarjeta_roja", "entidades": {"jugador_num": 5}},
+#     
+#     # PENALES - Nueva categoría
+#     {"texto": "Penal para el equipo azul", "intencion": "penal", "entidades": {"equipo": "azul"}},
+#     {"texto": "Penalti a favor del equipo rojo", "intencion": "penal", "entidades": {"equipo": "rojo"}},
+#     {"texto": "Penalty", "intencion": "penal", "entidades": {}},
+#     {"texto": "Tiro penal", "intencion": "penal", "entidades": {}},
+#     {"texto": "Falta dentro del área", "intencion": "penal", "entidades": {}},
+#     {"texto": "Penal cobrado por el 10", "intencion": "penal", "entidades": {"jugador_num": 10}},
+#     {"texto": "Penal claro para el equipo local", "intencion": "penal", "entidades": {"equipo": "local"}},
+#     {"texto": "El árbitro marca penal para el visitante", "intencion": "penal", "entidades": {"equipo": "visitante"}},
+#     {"texto": "Penalti cometido dentro del área", "intencion": "penal", "entidades": {}},
+#     {"texto": "Señalan penalti después de revisar el VAR", "intencion": "penal", "entidades": {}},
+#     {"texto": "El defensa toca el balón con la mano en el área", "intencion": "penal", "entidades": {}},
+#     {"texto": "Penal claro para el equipo local", "intencion": "penal", "entidades": {"equipo": "local"}},
+#     {"texto": "El árbitro marca penal para el visitante", "intencion": "penal", "entidades": {"equipo": "visitante"}},
+#     {"texto": "Penal fallado por el delantero", "intencion": "penal", "entidades": {"jugador_posicion": "delantero"}},
+#     
+#     # CORNERS - Nueva categoría
+#     {"texto": "Córner para el equipo azul", "intencion": "corner", "entidades": {"equipo": "azul"}},
+#     {"texto": "Saque de esquina", "intencion": "corner", "entidades": {}},
+#     {"texto": "Corner", "intencion": "corner", "entidades": {}},
+#     {"texto": "Tiro de esquina para el rojo", "intencion": "corner", "entidades": {"equipo": "rojo"}},
+#     
+#     # OFFSIDE - Nueva categoría
+#     {"texto": "Fuera de juego", "intencion": "offside", "entidades": {}},
+#     {"texto": "Offside", "intencion": "offside", "entidades": {}},
+#     {"texto": "El 9 estaba en fuera de juego", "intencion": "offside", "entidades": {"jugador_num": 9}},
+#     {"texto": "Posición adelantada", "intencion": "offside", "entidades": {}},
+#     
+#     # CAMBIOS/SUSTITUCIONES - Más variaciones
+#     {"texto": "Cambio del 9 por el 11", "intencion": "cambio", "entidades": {"jugador_sale_num": 9, "jugador_entra_num": 11}},
+#     {"texto": "El 9 sale y entra el 11", "intencion": "cambio", "entidades": {"jugador_sale_num": 9, "jugador_entra_num": 11}},
+#     {"texto": "Sustitución: 9 por 11", "intencion": "cambio", "entidades": {"jugador_sale_num": 9, "jugador_entra_num": 11}},
+#     {"texto": "Entra el 11 por el 9", "intencion": "cambio", "entidades": {"jugador_sale_num": 9, "jugador_entra_num": 11}},
+#     {"texto": "Sustitución: sale Carlos Vega y entra Juan Pérez", "intencion": "cambio", 
+#      "entidades": {"jugador_sale_nombre": "Carlos Vega", "jugador_entra_nombre": "Juan Pérez"}},
+#     {"texto": "Juan Pérez reemplaza a Carlos Vega", "intencion": "cambio", 
+#      "entidades": {"jugador_sale_nombre": "Carlos Vega", "jugador_entra_nombre": "Juan Pérez"}},
+#     
+#     # TIEMPOS/PERÍODOS - Más variaciones
+#     {"texto": "Comienza el partido", "intencion": "inicio_partido", "entidades": {}},
+#     {"texto": "Inicia el encuentro", "intencion": "inicio_partido", "entidades": {}},
+#     {"texto": "Pitazo inicial", "intencion": "inicio_partido", "entidades": {}},
+#     {"texto": "Arranca el partido", "intencion": "inicio_partido", "entidades": {}},
+#     {"texto": "Inicia el primer tiempo", "intencion": "inicio_primer_tiempo", "entidades": {}},
+#     {"texto": "Comienza la primera mitad", "intencion": "inicio_primer_tiempo", "entidades": {}},
+#     {"texto": "Comienza el segundo tiempo", "intencion": "inicio_segundo_tiempo", "entidades": {}},
+#     {"texto": "Inicia la segunda mitad", "intencion": "inicio_segundo_tiempo", "entidades": {}},
+#     {"texto": "Segundo tiempo en marcha", "intencion": "inicio_segundo_tiempo", "entidades": {}},
+#     {"texto": "Fin del primer tiempo", "intencion": "fin_primer_tiempo", "entidades": {}},
+#     {"texto": "Termina la primera mitad", "intencion": "fin_primer_tiempo", "entidades": {}},
+#     {"texto": "Descanso", "intencion": "fin_primer_tiempo", "entidades": {}},
+#     {"texto": "Final del partido", "intencion": "fin_partido", "entidades": {}},
+#     {"texto": "Termina el encuentro", "intencion": "fin_partido", "entidades": {}},
+#     {"texto": "Pitazo final", "intencion": "fin_partido", "entidades": {}},
+#     {"texto": "Fin del juego", "intencion": "fin_partido", "entidades": {}},
+#     
+#     # TIEMPO ADICIONAL - Nueva categoría
+#     {"texto": "Tiempo adicional", "intencion": "tiempo_adicional", "entidades": {}},
+#     {"texto": "Tiempo de descuento", "intencion": "tiempo_adicional", "entidades": {}},
+#     {"texto": "Minutos adicionales", "intencion": "tiempo_adicional", "entidades": {}},
+#     {"texto": "5 minutos de descuento", "intencion": "tiempo_adicional", "entidades": {"minutos": 5}},
+#     
+#     # SAQUES - Nueva categoría  
+#     {"texto": "Saque de banda", "intencion": "saque_banda", "entidades": {}},
+#     {"texto": "Lateral", "intencion": "saque_banda", "entidades": {}},
+#     {"texto": "Saque de puerta", "intencion": "saque_puerta", "entidades": {}},
+#     {"texto": "Saque del portero", "intencion": "saque_puerta", "entidades": {}},
+#     {"texto": "Tiro libre", "intencion": "tiro_libre", "entidades": {}},
+#     {"texto": "Falta directa", "intencion": "tiro_libre", "entidades": {}},
+# ]
 
 
 # TÉCNICAS DE AUMENTO DE DATOS MEJORADAS
@@ -358,59 +358,6 @@ for idx, weight in class_weights_dict.items():
     print(f"Clase '{indice_a_intencion[idx]}': {weight:.4f}")
 
 
-# MODELO MEJORADO CON ARQUITECTURA MÁS SOFISTICADA
-# def crear_modelo_avanzado(vocab_size, embedding_dim=256, lstm_units=128):
-#     entrada = Input(shape=(max_longitud,))
-#     
-#     # Embedding layer mejorado
-#     x = Embedding(
-#         vocab_size, 
-#         embedding_dim, 
-#         input_length=max_longitud,
-#         embeddings_regularizer=l2(0.001)
-#     )(entrada)
-#     x = Dropout(0.2)(x)
-#     
-#     # Múltiples capas LSTM bidireccionales
-#     x = Bidirectional(LSTM(lstm_units, return_sequences=True, dropout=0.2, recurrent_dropout=0.2))(x)
-#     x = LayerNormalization()(x)
-#     
-#     x = Bidirectional(LSTM(lstm_units//2, return_sequences=True, dropout=0.2, recurrent_dropout=0.2))(x)
-#     x = LayerNormalization()(x)
-#     
-#     # Pooling global mejorado
-#     max_pool = GlobalMaxPooling1D()(x)
-#     
-#     # Capas densas con regularización
-#     x = Dense(256, activation='relu', kernel_regularizer=l2(0.001))(max_pool)
-#     x = BatchNormalization()(x)
-#     x = Dropout(0.5)(x)
-#     
-#     x = Dense(128, activation='relu', kernel_regularizer=l2(0.001))(x)
-#     x = BatchNormalization()(x)
-#     x = Dropout(0.3)(x)
-#     
-#     # Capa de salida
-#     salida = Dense(len(intenciones_unicas), activation='softmax')(x)
-#     
-#     modelo = Model(inputs=entrada, outputs=salida)
-#     
-#     # Optimizador mejorado
-#     optimizer = tf.keras.optimizers.Adam(
-#         learning_rate=0.001,
-#         beta_1=0.9,
-#         beta_2=0.999,
-#         epsilon=1e-07
-#     )
-#     
-#     modelo.compile(
-#         loss='categorical_crossentropy',
-#         optimizer=optimizer,
-#         metrics=['accuracy', 'top_k_categorical_accuracy']
-#     )
-#     
-#     return modelo
-
 
 
 # testing new model
@@ -544,32 +491,6 @@ for i, clase in enumerate(intenciones_unicas):
 
 
 
-# def extraer_entidades_mejorado(texto, intencion, lista_jugadores):
-#     entidades = {}
-#     texto_original = texto
-#     texto = texto.lower()
-#
-#     # Buscar números de camiseta
-#     if intencion in ["gol", "falta", "tarjeta_amarilla", "tarjeta_roja"]:
-#         match = re.search(r'(?:el\s+)?(?:número|#|jugador)\s+(\d+)', texto)
-#         if match:
-#             entidades["jugador_num"] = int(match.group(1))
-#
-#     # Buscar nombres completos usando el JSON
-#     for nombre in lista_jugadores:
-#         if nombre.lower() in texto:
-#             entidades["jugador_nombre"] = nombre
-#             break
-#
-#     # Equipos
-#     if "equipo" in intencion or intencion in ["gol", "penal", "corner"]:
-#         if "rojo" in texto:
-#             entidades["equipo"] = "rojo"
-#         elif "azul" in texto:
-#             entidades["equipo"] = "azul"
-#
-#     return entidades
-
 
 
 def extraer_entidades_mejorado(texto, intencion, lista_jugadores, umbral_similitud=80):
@@ -647,19 +568,6 @@ ejemplos_prueba = [
     "Tarjeta amarilla para Román Pérez del equipo rojiblanco",
     "Cambio: sale el 8 y entra el 14",
     "Comienza el segundo tiempo",
-    # "Penal para el equipo azul",
-    # "Fuera de juego del número 9",
-    # "Córner para el rojo",
-    # "El siete anota un gol espectacular",
-    # "Roja directa para Josué Pech",
-    # "Córner para el equipo rojo",
-    # "Tiro libre directo",
-    # "Penalti claro para el azul",
-    # "Fuera de juego del 9",
-    # "Empieza el partido ahora",
-    # "Tres minutos de tiempo extra",
-    # "Cinco minutos de tiempo adicional",
-    # "Tarjeta roja para Saturnino Balamm"
 ]
 
 print("\n" + "="*50)
@@ -676,39 +584,37 @@ for ejemplo in ejemplos_prueba:
 
 
 
-# Convertir a TensorFlow Lite con soporte para operaciones de TF
-def convertir_a_tflite_optimizado(keras_model_path, tflite_path):
-    # Cargar el modelo Keras
+# Convertir a TensorFlow Lite COMPATIBLE (sin Select TF Ops)
+def convertir_a_tflite_compatible(keras_model_path, tflite_path):
+    """Convertir a TFLite usando SOLO operaciones nativas de TFLite"""
     model = tf.keras.models.load_model(keras_model_path)
-
-    # Configurar el convertidor desde el modelo Keras
+    
     converter = tf.lite.TFLiteConverter.from_keras_model(model)
     
-    # Optimización y cuantización
+    # SOLO operaciones nativas de TFLite (sin Select TF Ops)
     converter.optimizations = [tf.lite.Optimize.DEFAULT]
-    converter.target_spec.supported_types = [tf.float16]  # Para reducir tamaño
-
-    # Permitir operaciones de TensorFlow (Select TF Ops)
-    converter.target_spec.supported_ops = [
-        tf.lite.OpsSet.TFLITE_BUILTINS,  # Operaciones nativas de TFLite
-        tf.lite.OpsSet.SELECT_TF_OPS    # Añadir operaciones de TensorFlow
-    ]
-
-    # Desactivar la bajada de TensorList (opcional)
-    converter._experimental_lower_tensor_list_ops = False
-
-    # Convertir
-    tflite_model = converter.convert()
+    converter.target_spec.supported_ops = [tf.lite.OpsSet.TFLITE_BUILTINS]
     
-    # Guardar el modelo TFLite
-    with open(tflite_path, 'wb') as f:
-        f.write(tflite_model)
+    # Configuraciones adicionales para compatibilidad
+    converter.allow_custom_ops = False
+    converter.experimental_new_converter = True
     
-    print(f"Modelo TFLite guardado en {tflite_path}")
-    print(f"Tamaño del modelo: {len(tflite_model) / 1024:.2f} KB")
+    try:
+        tflite_model = converter.convert()
+        
+        with open(tflite_path, 'wb') as f:
+            f.write(tflite_model)
+        
+        print(f"Modelo TFLite compatible guardado en {tflite_path}")
+        print(f"Tamaño del modelo: {len(tflite_model) / 1024:.2f} KB")
+        return True
+        
+    except Exception as e:
+        print(f"Error en conversión: {e}")
+        return False
 
 # Llamar a la función con el archivo .keras
-convertir_a_tflite_optimizado('intencion_model_mejorado.keras', 'soccer_events_model_mejorado.tflite')
+convertir_a_tflite_compatible('intencion_model_mejorado.keras', 'soccer_events_model_mejorado.tflite')
 
 
 print(f"\nArchivos generados:")
