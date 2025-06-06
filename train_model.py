@@ -17,6 +17,7 @@ from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
 from tensorflow.keras.regularizers import l2
 from sklearn.utils.class_weight import compute_class_weight
 from collections import Counter
+from rapidfuzz import fuzz, process
 
 def cargar_nombres(ruta_nombres, ruta_apellidos):
     with open(ruta_nombres, 'r', encoding='utf-8') as f:
@@ -57,10 +58,12 @@ ejemplos_entrenamiento = [
     {"texto": "El siete marca", "intencion": "gol", "entidades": {"jugador_num": 7}},
     {"texto": "Golazo del 7", "intencion": "gol", "entidades": {"jugador_num": 7}},
     {"texto": "Omar Uicab metió gol", "intencion": "gol", "entidades": {"jugador_nombre": "Omar Uicab"}},
-    {"texto": "Gol de Eduardo Casanova", "intencion": "gol", "entidades": {"jugador_nombre": "Eduardo Casanova"}},
+    {"texto": "Gol de Aaron Abila", "intencion": "gol", "entidades": {"jugador_nombre": "Aaron Avila"}},
     {"texto": "Anota Ricardo Balam", "intencion": "gol", "entidades": {"jugador_nombre": "Ricardo Balam"}},
     {"texto": "Jugador 7 del equipo rojo anota", "intencion": "gol", "entidades": {"jugador_num": 7, "equipo": "rojo"}},
     {"texto": "Gol del equipo azul, número 10", "intencion": "gol", "entidades": {"jugador_num": 10, "equipo": "azul"}},
+    {"texto": "Alan Egg anotó gol", "intencion": "gol", "entidades": {"jugador_nombre": "Alan Ek"}},
+    {"texto": "Golazo de Aaron Abila", "intencion": "gol", "entidades": {"jugador_nombre": "Aaron Avila"}},
     
     # FALTAS - Más variaciones
     {"texto": "Falta del número 10", "intencion": "falta", "entidades": {"jugador_num": 10}},
@@ -72,6 +75,8 @@ ejemplos_entrenamiento = [
     {"texto": "Falta de Mizael Uc", "intencion": "falta", "entidades": {"jugador_nombre": "Mizael Uc"}},
     {"texto": "Falta contra el número 3", "intencion": "falta", "entidades": {"jugador_afectado_num": 3}},
     {"texto": "Falta sobre el 3", "intencion": "falta", "entidades": {"jugador_afectado_num": 3}},
+    {"texto": "Aaron Abila hizo falta", "intencion": "falta", "entidades": {"jugador_nombre": "Aaron Avila"}},
+    {"texto": "El jugador Aaron Abila cometió infracción", "intencion": "falta", "entidades": {"jugador_nombre": "Aaron Avila"}},
     
     # TARJETAS AMARILLAS - Más variaciones
     {"texto": "Tarjeta amarilla para el 8", "intencion": "tarjeta_amarilla", "entidades": {"jugador_num": 8}},
@@ -565,33 +570,43 @@ for i, clase in enumerate(intenciones_unicas):
 #
 #     return entidades
 
-def extraer_entidades_mejorado(texto, intencion, lista_jugadores):
+
+
+def extraer_entidades_mejorado(texto, intencion, lista_jugadores, umbral_similitud=80):
     entidades = {}
     texto_original = texto
     texto = texto.lower()
 
-    # Buscar nombres completos usando el JSON
     for nombre in lista_jugadores:
         if nombre.lower() in texto:
             entidades["jugador_nombre"] = nombre
-            break  # Salir si encontró nombre
+            break
 
-    # Si no hay nombre encontrado, buscar número
+    if "jugador_nombre" not in entidades:
+        if lista_jugadores:
+            resultados_similares = process.extract(
+                texto,
+                lista_jugadores,
+                scorer=fuzz.token_sort_ratio,
+                limit=3
+            )
+            if resultados_similares and resultados_similares[0][1] >= umbral_similitud:
+                entidades["jugador_nombre"] = resultados_similares[0][0]
+                print(f"[SIMILITUD] Coincidencia aproximada: '{resultados_similares[0][0]}' (score: {resultados_similares[0][1]:.1f})")
+
     if "jugador_nombre" not in entidades:
         if intencion in ["gol", "falta", "tarjeta_amarilla", "tarjeta_roja", "offside"]:
-            # Patrones para encontrar números de jugador
             patrones_jugador = [
                 r'(?:jugador\s+(?:número\s+)?|número\s+|#|el\s+)(\d+)',
                 r'\b(\d+)\b'  # Números sueltos
             ]
-            
             for patron in patrones_jugador:
                 match = re.search(patron, texto)
                 if match:
                     entidades["jugador_num"] = int(match.group(1))
-                    break  # Salir si encontró número
+                    break
 
-    # Detectar equipos
+    # Equipos
     if "equipo" in intencion or intencion in ["gol", "penal", "corner"]:
         if "rojo" in texto:
             entidades["equipo"] = "rojo"
@@ -610,7 +625,9 @@ def procesar_texto_mejorado(texto, lista_jugadores):
     intencion = indice_a_intencion[intencion_idx]
     confianza = float(prediccion[intencion_idx])
     top_3 = [(indice_a_intencion[i], float(prediccion[i])) for i in np.argsort(prediccion)[-3:][::-1]]
+
     entidades = extraer_entidades_mejorado(texto_limpio, intencion, lista_jugadores)
+
     return {
         "intencion": intencion,
         "confianza": confianza,
@@ -626,23 +643,23 @@ ejemplos_prueba = [
     "Fuera de juego del 9",
     "Empieza el partido ahora",
     "Tres minutos de tiempo extra",
-    "Saturnino Cob metió un golazo",
+    "Yahir Balamm metió un golazo",
     "Tarjeta amarilla para Román Pérez del equipo rojiblanco",
     "Cambio: sale el 8 y entra el 14",
     "Comienza el segundo tiempo",
-    "Penal para el equipo azul",
-    "Fuera de juego del número 9",
-    "Córner para el rojo",
-    "El siete anota un gol espectacular",
-    "Roja directa para Eduardo Casanova",
-    "Córner para el equipo rojo",
-    "Tiro libre directo",
-    "Penalti claro para el azul",
-    "Fuera de juego del 9",
-    "Empieza el partido ahora",
-    "Tres minutos de tiempo extra",
-    "Cinco minutos de tiempo adicional",
-    "Tarjeta roja para Juan Escutia"
+    # "Penal para el equipo azul",
+    # "Fuera de juego del número 9",
+    # "Córner para el rojo",
+    # "El siete anota un gol espectacular",
+    # "Roja directa para Josué Pech",
+    # "Córner para el equipo rojo",
+    # "Tiro libre directo",
+    # "Penalti claro para el azul",
+    # "Fuera de juego del 9",
+    # "Empieza el partido ahora",
+    # "Tres minutos de tiempo extra",
+    # "Cinco minutos de tiempo adicional",
+    # "Tarjeta roja para Saturnino Balamm"
 ]
 
 print("\n" + "="*50)
@@ -698,3 +715,9 @@ print(f"\nArchivos generados:")
 print("- soccer_events_model_mejorado.tflite")
 print("- tokenizer_mejorado.pickle") 
 print("- intencion_mapeo_mejorado.json")
+
+word_index_path = 'word_index.json'
+with open(word_index_path, 'w', encoding='utf-8') as f:
+    json.dump(tokenizer.word_index, f, ensure_ascii=False, indent=2)
+
+print(f"Tokenizador guardado como JSON en {word_index_path}")
